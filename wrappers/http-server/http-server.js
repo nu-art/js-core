@@ -1,9 +1,6 @@
 /**
  * Module dependencies.
  */
-const Express = require('express');
-const bodyParser = require('body-parser');
-
 const Wrapper = require("../wrapper-core").Wrapper;
 
 class HttpServer
@@ -12,8 +9,8 @@ class HttpServer
 	constructor() {
 		super("http-server");
 
-		this.express = new Express();
-		this.express.use(bodyParser.json());
+		this.express = new require('express')();
+		this.express.use(require('body-parser').json());
 	}
 
 	_connect(callback) {

@@ -57,16 +57,16 @@ class AWS_S3
 		});
 	}
 
-	uploadFile(pathToLocalFile, pathToRemoteFile, callback) {
+	uploadFile(pathToLocalFile, bucket, pathToRemoteFile, callback) {
 		let body = fs.readFileSync(pathToLocalFile);
 		let params = {
-			Bucket: `${this.config.bucketName}`,
+			Bucket: `${bucket || this.config.bucketName}`,
 			Key: pathToRemoteFile,
 			Body: body,
 		};
 
 		this.client.putObject(params, (err, data) => {
-			this.logDebug("Successfully uploaded data to myBucket/myKey");
+			this.logDebug(`Successfully uploaded file ${pathToLocalFile} => ${params.Bucket}/${params.Key}`);
 			callback(err);
 		});
 	}

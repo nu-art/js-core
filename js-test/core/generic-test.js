@@ -6,20 +6,20 @@
 const BaseTest = require('./base-test');
 
 class GenericTest
-    extends BaseTest {
+	extends BaseTest {
 
-    constructor(name, action) {
-        super(name);
-        this.action = action;
-    }
+	constructor(name, action) {
+		super(name);
+		this.action = action;
+	}
 
-    execute(callback) {
-        this.action((err, response) => {
-            this.responseListener(response);
+	execute(callback) {
+		this.action((err, response) => {
+			this.responseListener(response);
 
-            callback(err, response);
-        })
-    }
+			callback(err, response);
+		}, this)
+	}
 }
 
 module.exports = GenericTest;
