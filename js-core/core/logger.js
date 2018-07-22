@@ -34,7 +34,7 @@ function getColor(level, bold) {
 
 	}
 	if (!color)
-		return getColor();
+		return "\x1b[0m";
 
 	return color + (bold ? "\x1b[1m" : "");
 }
