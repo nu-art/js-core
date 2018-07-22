@@ -38,10 +38,12 @@ function getColor(level, bold) {
 			break;
 
 	}
-	if (!color)
-		return "\x1b[0m";
+	if (!color) {
+		color = "\x1b[0m";
+		color = "\033[0m";
+	}
 
-	return color + (bold ? "\x1b[1m" : "");
+	return color;// + (bold ? "\x1b[1m" : "");
 }
 
 function getPrefix(level) {
