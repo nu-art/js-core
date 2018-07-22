@@ -5,7 +5,6 @@
 // Bucket names must be unique across all S3 users
 
 const Wrapper = require('../wrapper-core').Wrapper;
-var AWS = require('aws-sdk');
 var fs = require('fs');
 
 class AWS_S3
@@ -16,6 +15,7 @@ class AWS_S3
 	}
 
 	_connect(callback) {
+		let AWS = require('aws-sdk');
 		AWS.config.update({
 			region: this.config.region,
 			accessKeyId: this.config.accessKeyId,
