@@ -14,33 +14,33 @@ function getColor(level, bold) {
 	switch (level) {
 		case "Verbose":
 			color = "\x1b[30m";
-			color = "\\033[30m";
+			color = "\033[30m";
 			break;
 
 		case "Debug":
 			color = "\x1b[34m";
-			color = "\\033[34m";
+			color = "\033[34m";
 			break;
 
 		case "Info":
 			color = "\x1b[32m";
-			color = "\\033[32m";
+			color = "\033[32m";
 			break;
 
 		case "Warning":
 			color = "\x1b[33m";
-			color = "\\033[33m";
+			color = "\033[33m";
 			break;
 
 		case "Error":
 			color = "\033[31m";
-			color = "\\x1b[31m";
+			color = "\x1b[31m";
 			break;
 
 	}
 	if (!color) {
 		color = "\x1b[0m";
-		color = "\\033[0m";
+		color = "\033[0m";
 	}
 
 	return color;// + (bold ? "\x1b[1m" : "");
