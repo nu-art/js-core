@@ -66,6 +66,10 @@ const finalDate = new Date();
 
 class Logger {
 	constructor(tag) {
+		this.setTag(tag);
+	}
+
+	setTag(tag) {
 		this.tag = tag;
 	}
 

@@ -126,7 +126,12 @@ class HttpRequestTest
 			try {
 				if (!bodyAsString || bodyAsString === "")
 					bodyAsString = "{}";
-				bodyAsObject = JSON.parse(bodyAsString);
+
+				if (response.headers && response.headers["content-type"] && response.headers["content-type"].indexOf("application/json") !== -1)
+					bodyAsObject = JSON.parse(bodyAsString);
+				else
+					bodyAsObject = bodyAsString;
+
 			} catch (e) {
 				this.logError(" ---- Response: " + Logger.indentBy(bodyAsString, " ---- Response: ".length + 1));
 				return callback(e);
@@ -185,7 +190,7 @@ class HttpRequestTest
 		if (expectedStatusCode)
 			validator.statusCode = (statusCode) => {
 				if (statusCode !== expectedStatusCode)
-					throw new Error("Expected failure statusCode " + expectedStatusCode + ", but received " + statusCode);
+					throw new Error("Expected statusCode " + expectedStatusCode + ", but received " + statusCode);
 
 			};
 

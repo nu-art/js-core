@@ -4,7 +4,7 @@
 const Crypto = require("crypto");
 
 const generateHex = (length) => {
-	return Crypto.randomBytes(Math.ceil(length / 2)).toString('hex').slice(0, length)
+	return Crypto.randomBytes(Math.ceil(length / 2)).toString('hex').slice(0, length);
 };
 
 const hashPasswordWithSalt = (salt, password) => {

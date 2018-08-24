@@ -46,7 +46,7 @@ class CollectionWrapper {
 					return;
 				}
 
-				callback(undefined, cursor)
+				cursor.toArray(callback)
 			});
 		});
 	}

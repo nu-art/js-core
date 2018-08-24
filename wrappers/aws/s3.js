@@ -36,6 +36,7 @@ class AWS_S3
 			Bucket: `${this.config.bucketName}`,
 			Key: pathToRemoteFile,
 		};
+
 		const fileStream = this.client.getObject(params).createReadStream();
 		let paramsAsString = JSON.stringify(params);
 
@@ -55,6 +56,18 @@ class AWS_S3
 			this.logDebug(`Completed downloading file: ${paramsAsString}`);
 			callback(null, Buffer.concat(chunks));
 		});
+	}
+
+	getSecuredUrl(pathToRemoteFile, contentType, expiresInSec, callback) {
+		const params = {
+			Bucket: `${this.config.bucketName}`,
+			Key: pathToRemoteFile,
+			Expires: expiresInSec,
+			ACL: `write`,
+			ContentType: contentType,
+		};
+
+		this.client.getSignedUrl(`putObject`, params, callback);
 	}
 
 	uploadFile(pathToLocalFile, pathToRemoteFile, callback) {

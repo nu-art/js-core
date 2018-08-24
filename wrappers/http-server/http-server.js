@@ -13,6 +13,16 @@ class HttpServer
 		super("http-server");
 
 		this.express = new Express();
+		this.express.all("*", (req, res, next) => {
+
+			res.setHeader('Access-Control-Allow-Origin', "*");
+			res.setHeader('Access-Control-Allow-Methods', "POST");
+			res.setHeader('Access-Control-Allow-Headers', "content-type");
+			next();
+		}).options((req, res, next) => {
+			res.end();
+		});
+
 		this.express.use(bodyParser.json());
 	}
 

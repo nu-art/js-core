@@ -10,20 +10,21 @@ const Url = require('url');
 class ServerApi
 	extends Logger {
 
-	constructor(method, relativePath) {
-		super(relativePath);
+	constructor(method, relativePath, tag) {
+		super(tag || relativePath);
 		this.method = method;
 		this.relativePath = "/" + relativePath;
 	}
 
-	route(router) {
+	route(router, prefixUrl) {
+		let fullPath = `${this.relativePath}`;
 		switch (this.method) {
 			case ServerApi.Method_POST:
-				router.post(this.relativePath, this.call.bind(this));
+				router.post(fullPath, this.call.bind(this));
 				break;
 
 			case ServerApi.Method_GET:
-				router.get(this.relativePath, this.call.bind(this));
+				router.get(fullPath, this.call.bind(this));
 				break;
 		}
 	}
@@ -47,15 +48,21 @@ class ServerApi
 				res.end(response, "text/html");
 			},
 			json: (responseCode, response, headers) => {
+				(headers = headers || {})["content-type"] = "application/json";
 				res.set(headers);
 				res.writeHead(responseCode);
-				res.end(JSON.stringify(response), "application/json");
+				res.end(JSON.stringify(response));
 			},
-			exception: (exception, headers) => {
-				_res.json(exception.responseCode, exception.errorBody, headers);
+			end: (responseCode, headers) => {
+				(headers = headers || {})["content-type"] = "application/json";
+				res.set(headers);
+				res.end(responseCode);
+			},
+			exception: (exception, message, headers) => {
+				_res.json(exception.responseCode, `${exception.errorBody}${message ? "\n" + message : ""}`, headers);
 			},
 			serverError: (error, headers) => {
-				_res.text(500, error, headers);
+				_res.text(500, error.stack, headers);
 			},
 			apiErrorHandler: (callback, headers) => {
 				return (error, data1, data2, data3) => {
@@ -68,6 +75,7 @@ class ServerApi
 		};
 
 		try {
+			this.logInfo("-- Url: " + JSON.stringify(req.originalUrl));
 			const reqQuery = Url.parse(req.url, true).query;
 			if (reqQuery && Object.keys(reqQuery).length)
 				this.logVerbose("-- Url Params: " + JSON.stringify(reqQuery));
