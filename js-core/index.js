@@ -22,5 +22,6 @@ module.exports.BadImplementationException = Exceptions.BadImplementationExceptio
 module.exports.ImplementationMissingException = Exceptions.ImplementationMissingException;
 module.exports.validator = require("./core/validator");
 module.exports.Validator = require("./core/new-validator");
+module.exports.CommandLine = require("./core/command-line");
 module.exports.Crypto = require("./core/crypto");
 

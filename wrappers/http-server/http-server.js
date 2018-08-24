@@ -1,9 +1,6 @@
 /**
  * Module dependencies.
  */
-const Express = require('express');
-const bodyParser = require('body-parser');
-
 const Wrapper = require("../wrapper-core").Wrapper;
 
 class HttpServer
@@ -12,7 +9,8 @@ class HttpServer
 	constructor() {
 		super("http-server");
 
-		this.express = new Express();
+		this.express = new require('express')();
+		this.express.use(require('body-parser').json());
 		this.express.all("*", (req, res, next) => {
 
 			res.setHeader('Access-Control-Allow-Origin', "*");

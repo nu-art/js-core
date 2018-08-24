@@ -5,7 +5,6 @@ const JSCore = require('js-core');
 const Logger = JSCore.Logger;
 
 const BaseTest = require('./base-test');
-const request = require('request');
 
 class HttpRequestTest
 	extends BaseTest {
@@ -108,7 +107,7 @@ class HttpRequestTest
 		if (requestBody.body)
 			this.logVerbose(" ---- Body: " + Logger.indentBy(requestBody.body, " ---- Body: ".length + 1));
 
-		request(requestBody, function (error, response, bodyAsString) {
+		require('request')(requestBody, function (error, response, bodyAsString) {
 
 			let responseToValidate;
 

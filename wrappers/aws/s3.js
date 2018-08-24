@@ -5,7 +5,6 @@
 // Bucket names must be unique across all S3 users
 
 const Wrapper = require('../wrapper-core').Wrapper;
-var AWS = require('aws-sdk');
 var fs = require('fs');
 
 class AWS_S3
@@ -16,6 +15,7 @@ class AWS_S3
 	}
 
 	_connect(callback) {
+		let AWS = require('aws-sdk');
 		AWS.config.update({
 			region: this.config.region,
 			accessKeyId: this.config.accessKeyId,
@@ -70,16 +70,16 @@ class AWS_S3
 		this.client.getSignedUrl(`putObject`, params, callback);
 	}
 
-	uploadFile(pathToLocalFile, pathToRemoteFile, callback) {
+	uploadFile(pathToLocalFile, bucket, pathToRemoteFile, callback) {
 		let body = fs.readFileSync(pathToLocalFile);
 		let params = {
-			Bucket: `${this.config.bucketName}`,
+			Bucket: `${bucket || this.config.bucketName}`,
 			Key: pathToRemoteFile,
 			Body: body,
 		};
 
 		this.client.putObject(params, (err, data) => {
-			this.logDebug("Successfully uploaded data to myBucket/myKey");
+			this.logDebug(`Successfully uploaded file ${pathToLocalFile} => ${params.Bucket}/${params.Key}`);
 			callback(err);
 		});
 	}

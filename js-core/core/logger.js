@@ -34,7 +34,7 @@ function getColor(level, bold) {
 
 	}
 	if (!color)
-		return "";
+		return "\x1b[0m";
 
 	return color + (bold ? "\x1b[1m" : "");
 }
@@ -127,13 +127,13 @@ class Logger {
 
 		const color = getColor(level, bold);
 		if (message)
-			console.log(color, logPrefix + message.replace(/\n/g, "\n" + space), "\x1b[0m");
+			console.log(color, logPrefix + message.replace(/\n/g, "\n" + space), getColor());
 
 		if (error instanceof Error) {
-			console.log(color, space + error.message, "\x1b[0m");
-			console.log(color, space + error.stack.replace(/\n/g, "\n" + space), "\x1b[0m");
+			console.log(color, space + error.message, getColor());
+			console.log(color, space + error.stack.replace(/\n/g, "\n" + space), getColor());
 		} else if (error)
-			console.log(color, space + error, "\x1b[0m");
+			console.log(color, space + error, getColor());
 
 	}
 

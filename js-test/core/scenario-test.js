@@ -20,7 +20,14 @@ class Scenario
 	}
 
 	getCurrentTest() {
-		return this.tests[this.index];
+		let test = this.tests[this.index];
+		if (test instanceof Function) {
+			test = test();
+			this.validateTest(test);
+			this.tests[this.index] = test;
+		}
+
+		return test;
 	}
 
 	addTest(test, scenarioResponseListener) {
@@ -39,6 +46,13 @@ class Scenario
 			return;
 		}
 
+		if (!(test instanceof Function))
+			this.validateTest(test, scenarioResponseListener);
+
+		this.tests.splice(index, 0, test);
+	}
+
+	validateTest(test, scenarioResponseListener) {
 		if (!(test instanceof BaseTest))
 			throw new Error("test must be of type BaseTest!!");
 
@@ -48,10 +62,6 @@ class Scenario
 			testResponseListener = test.responseListener;
 
 		test.responseListener = (response) => {
-			if (!(test instanceof HttpRequestTest)) {
-				// this.logInfo("-- Response: " + JSON.stringify(response));
-			}
-
 			if (testResponseListener)
 				testResponseListener(response);
 
@@ -59,8 +69,6 @@ class Scenario
 				scenarioResponseListener(response);
 		};
 
-		this.tests.splice(index, 0, test);
-		// test.setLogPrefix(this.logPrefix + "  ");
 	}
 
 	execute(_callback) {
@@ -87,9 +95,9 @@ class Scenario
 
 		executeNext = () => {
 			if (this.index < this.tests.length) {
-				const test = this.getCurrentTest();
+				let test = this.getCurrentTest();
 				test.started();
-				this.logVerboseBold("----------------- Executing test(" + (this.index + 1) + "/" + this.tests.length + "): " + test.getName());
+				this.logVerboseBold("----------------- Executing (" + (this.index + 1) + "/" + this.tests.length + "): " + test.getName());
 				try {
 					test.execute(callback, this);
 				} catch (err) {
