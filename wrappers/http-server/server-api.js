@@ -59,7 +59,11 @@ class ServerApi
 				res.end(responseCode);
 			},
 			exception: (exception, message, headers) => {
-				_res.json(exception.responseCode, `${exception.errorBody}${message ? "\n" + message : ""}`, headers);
+				const target = {};
+				Object.assign(target, exception.errorBody);
+				if (message)
+					target.debug = message;
+				_res.json(exception.responseCode, target, headers);
 			},
 			serverError: (error, headers) => {
 				_res.text(500, error.stack, headers);

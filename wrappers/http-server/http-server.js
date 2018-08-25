@@ -20,8 +20,6 @@ class HttpServer
 		}).options((req, res, next) => {
 			res.end();
 		});
-
-		this.express.use(bodyParser.json());
 	}
 
 	_connect(callback) {
