@@ -46,11 +46,11 @@ class FirebaseSession
       return;
     }
 
-    this.db.ref(path).once("value", (err, snapshot) => {
+    this.db.ref(path).once("value", (snapshot, err) => {
       if (err)
         return callback(err);
 
-      callback(snapshot.val());
+      callback(undefined, snapshot.val());
     });
   }
 
@@ -111,7 +111,7 @@ class Firebase
   }
 
   createSession(config, email, password) {
-    const session = new FirebaseSession(config, email, password);
+    const session = new FirebaseSession(this.config[config], email, password);
     session.connect(this.firebase);
     return session;
   }

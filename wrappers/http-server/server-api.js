@@ -16,7 +16,7 @@ class ServerApi
   }
 
   route(router, prefixUrl) {
-    let fullPath = `${prefixUrl ? "/"+prefixUrl : ""}${this.relativePath}`;
+    let fullPath = `${prefixUrl ? "/" + prefixUrl : ""}${this.relativePath}`;
     switch (this.method) {
       case ServerApi.Method_POST:
         router.post(fullPath, this.call.bind(this));
@@ -55,7 +55,8 @@ class ServerApi
       end: (responseCode, headers) => {
         (headers = headers || {})["content-type"] = "application/json";
         res.set(headers);
-        res.end(responseCode);
+        res.writeHead(responseCode);
+        res.end();
       },
       exception: (exception, message, headers) => {
         const target = {};
