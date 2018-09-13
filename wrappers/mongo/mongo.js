@@ -19,7 +19,13 @@ class MongoDB
 
 	_connect(callback) {
 		const url = `mongodb://${this.config.host}:${this.config.port}`;
-		require('mongodb').MongoClient.connect(url, {useNewUrlParser: true}, (err, client) => {
+		require('mongodb').MongoClient.connect(url, {
+			useNewUrlParser: true,
+			keepAlive: 30000,
+			connectTimeoutMS: 30000,
+			reconnectTries: 10,
+			reconnectInterval: 5000
+		}, (err, client) => {
 			if (!err)
 				this.client = client.db(this.config.name);
 
