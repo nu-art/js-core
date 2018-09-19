@@ -3,95 +3,9 @@
  */
 
 const Wrapper = require('../wrapper-core').Wrapper;
-const Logger = require('js-core').Logger;
-
-class FirebaseSession
-  extends Logger {
-  constructor(config, email, password) {
-    super("firebase: " + config.projectId);
-    this.config = config;
-    this.email = email;
-    this.password = password;
-    this.toExecute = [];
-  }
-
-  connect(firebase) {
-    const config = this.config;
-    this.app = firebase.initializeApp(config, config.id);
-    firebase.auth(this.app).signInWithEmailAndPassword(this.email, this.password).then(() => {
-      this.logInfo("---- Firebase session connected: " + config.id);
-      this.db = this.app.database();
-      this.executePending();
-    }).catch(function (err) {
-      this.executePending(err);
-    });
-  }
-
-  executePending(err) {
-    this.toExecute.forEach((toExecute) => {
-      toExecute(err)
-    });
-
-    this.toExecute = [];
-  }
-
-  get(path, callback) {
-    if (!this.db) {
-      this.toExecute.push((err) => {
-        if (err)
-          return callback(err);
-
-        this.get(path, callback);
-      });
-      return;
-    }
-
-    this.db.ref(path).once("value", (snapshot, err) => {
-      if (err)
-        return callback(err);
-
-      callback(undefined, snapshot.val());
-    });
-  }
-
-  set(path, value, callback) {
-    if (!this.db) {
-      this.toExecute.push((err) => {
-        if (err)
-          return callback(err);
-
-        this.set(path, value, callback);
-      });
-      return;
-    }
-
-    this.db.ref(path).set(value, (err) => {
-      if (err)
-        return callback(err);
-
-      callback();
-    });
-  }
-
-  update(path, value, callback) {
-    if (!this.db) {
-      this.toExecute.push((err) => {
-        if (err)
-          return callback(err);
-
-        this.update(path, value, callback);
-      });
-      return;
-    }
-
-    this.db.ref(path).update(value, (err) => {
-      if (err)
-        return callback(err);
-
-      callback();
-    });
-  }
-}
+const FirebaseSession = require('./firebase-session');
+const FirebaseAuth_Admin = require('./auth/auth-admin');
+const FirebaseAuth_UsernameAndPassword = require('./auth/auth-user-pass');
 
 class Firebase
   extends Wrapper {
@@ -101,8 +15,6 @@ class Firebase
   }
 
   _connect(callback) {
-    this.firebase = require('firebase');
-
     callback();
   }
 
@@ -110,9 +22,15 @@ class Firebase
     callback();
   }
 
-  createSession(config, email, password) {
-    const session = new FirebaseSession(this.config[config], email, password);
-    session.connect(this.firebase);
+  createSessionWithUsernameAndPassword(config, email, password) {
+    const session = new FirebaseSession(this.config[config], new FirebaseAuth_UsernameAndPassword(email, password));
+    session.connect(require('firebase'));
+    return session;
+  }
+
+  createAdminSession() {
+    const session = new FirebaseSession(this.config["admin"], new FirebaseAuth_Admin(this.config["admin"]));
+    session.connect(require("firebase-admin"));
     return session;
   }
 }
