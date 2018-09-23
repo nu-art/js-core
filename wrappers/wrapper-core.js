@@ -43,6 +43,7 @@ class Wrapper
 				}
 
 				this._setState(WrapperState.Connected);
+				callback();
 			});
 			// do not return here.. go to the connecting phase and wait till connected
 		}

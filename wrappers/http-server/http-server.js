@@ -2,6 +2,7 @@
  * Module dependencies.
  */
 const Wrapper = require("../wrapper-core").Wrapper;
+const fs = require("fs");
 
 class HttpServer
 	extends Wrapper {
@@ -23,7 +24,9 @@ class HttpServer
 	}
 
 	_connect(callback) {
-		this.server = require('http').createServer(this.express);
+
+		this.server = this.createServer();
+
 		this.sockets = [];
 		this.server.listen(this.config.port);
 		this.server.on('connection', (socket) => {
@@ -67,6 +70,17 @@ class HttpServer
 			if (callback)
 				callback();
 		});
+	}
+
+	createServer() {
+		let ssl = this.config.ssl;
+		if (!ssl)
+			return require('http').createServer(this.express);
+
+		return require('https').createServer({
+			key: fs.readFileSync(ssl.key),
+			cert: fs.readFileSync(ssl.cert),
+		}, this.express);
 	}
 
 	_waitForConnectivity(callback) {

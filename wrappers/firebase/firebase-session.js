@@ -5,86 +5,106 @@
 const Logger = require('js-core').Logger;
 
 class FirebaseSession
-  extends Logger {
-  constructor(config, auth) {
-    super("firebase: " + config.projectId);
-    this.config = config;
-    this.auth = auth;
-    this.toExecute = [];
-  }
+	extends Logger {
+	constructor(config, auth) {
+		super("firebase: " + config.projectId);
+		this.config = config;
+		this.auth = auth;
+		this.toExecute = [];
+	}
 
-  connect(firebase) {
-    this.auth.auth(firebase, this.config, (err, app) => {
-      this.app = app;
-      this.db = this.app.database();
-      this.executePending(err);
-    });
-  }
+	connect(firebase) {
+		this.auth.auth(firebase, this.config, (err, app) => {
+			this.app = app;
+			this.db = this.app.database();
+			this.executePending(err);
+		});
+	}
 
-  executePending(err) {
-    this.toExecute.forEach((toExecute) => {
-      toExecute(err)
-    });
+	executePending(err) {
+		this.toExecute.forEach((toExecute) => {
+			toExecute(err)
+		});
 
-    this.toExecute = [];
-  }
+		this.toExecute = [];
+	}
 
-  get(path, callback) {
-    if (!this.db) {
-      this.toExecute.push((err) => {
-        if (err)
-          return callback(err);
+	get(path, callback) {
+		if (!this.db) {
+			this.toExecute.push((err) => {
+				if (err)
+					return callback(err);
 
-        this.get(path, callback);
-      });
-      return;
-    }
+				this.get(path, callback);
+			});
+			return;
+		}
 
-    this.db.ref(path).once("value", (snapshot, err) => {
-      if (err)
-        return callback(err);
+		this.db.ref(path).once("value", (snapshot, err) => {
+			if (err)
+				return callback(err);
 
-      callback(undefined, snapshot.val());
-    });
-  }
+			callback(undefined, snapshot.val());
+		});
+	}
 
-  set(path, value, callback) {
-    if (!this.db) {
-      this.toExecute.push((err) => {
-        if (err)
-          return callback(err);
+	set(path, value, callback) {
+		if (!this.db) {
+			this.toExecute.push((err) => {
+				if (err)
+					return callback(err);
 
-        this.set(path, value, callback);
-      });
-      return;
-    }
+				this.set(path, value, callback);
+			});
+			return;
+		}
 
-    this.db.ref(path).set(value, (err) => {
-      if (err)
-        return callback(err);
+		this.db.ref(path).set(value, (err) => {
+			if (err)
+				return callback(err);
 
-      callback();
-    });
-  }
+			callback();
+		});
+	}
 
-  update(path, value, callback) {
-    if (!this.db) {
-      this.toExecute.push((err) => {
-        if (err)
-          return callback(err);
+	update(path, value, callback) {
+		if (!this.db) {
+			this.toExecute.push((err) => {
+				if (err)
+					return callback(err);
 
-        this.update(path, value, callback);
-      });
-      return;
-    }
+				this.update(path, value, callback);
+			});
+			return;
+		}
 
-    this.db.ref(path).update(value, (err) => {
-      if (err)
-        return callback(err);
+		this.db.ref(path).update(value, (err) => {
+			if (err)
+				return callback(err);
 
-      callback();
-    });
-  }
+			callback();
+		});
+	}
+
+	sendMessage(token, message, callback) {
+		if (!this.app) {
+			this.toExecute.push((err) => {
+				if (err)
+					return callback(err);
+
+				this.sendMessage(token, message, callback);
+			});
+			return;
+		}
+
+		this.app.messaging().send(Object.assign({data: message}, {token: token}))
+				.then((response) => {
+					callback(undefined, response);
+				})
+				.catch((error) => {
+					callback(error);
+				});
+	}
 }
 
 module.exports = FirebaseSession;

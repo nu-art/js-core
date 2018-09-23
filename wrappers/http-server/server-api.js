@@ -96,7 +96,7 @@ class ServerApi
   }
 
   process(req, res, urlParams, body) {
-    throw new ImplementationMissingException("abstract class... implement this method");
+    throw new ImplementationMissingException("abstract class... implement this method");``
   }
 }
 

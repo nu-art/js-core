@@ -5,29 +5,26 @@
 const FirebaseAuth = require("../firebase-auth");
 
 class FirebaseAuth_Admin
-  extends FirebaseAuth {
+	extends FirebaseAuth {
 
-  constructor(username, password) {
-    super();
+	constructor(username, password) {
+		super();
 
-    this.username = username;
-    this.password = password;
-  }
+		this.username = username;
+		this.password = password;
+	}
 
-  auth(firebase, app, callback) {
+	auth(firebase, config, callback) {
 
-    var serviceAccount = require("path/to/serviceAccountKey.json");
+		const serviceAccount = JSON.parse(require("fs").readFileSync("./dev-cert/fcm-key.json"));
 
-    firebase.initializeApp({
-      credential: firebase.credential.cert(serviceAccount),
-      databaseURL: "https://test-fcm-fdcdc.firebaseio.com"
-    });
-    firebase.auth(app).signInWithEmailAndPassword(this.username, this.password).then(() => {
-      callback();
-    }).catch(function (err) {
-      callback(err);
-    });
-  }
+		const app = firebase.initializeApp({
+			credential: firebase.credential.cert(serviceAccount),
+			databaseURL: config.databaseURL
+		});
+
+		callback(undefined, app);
+	}
 }
 
 module.exports = FirebaseAuth_Admin;
