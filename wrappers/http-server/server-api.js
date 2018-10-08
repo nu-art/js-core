@@ -52,6 +52,14 @@ class ServerApi
         res.writeHead(responseCode);
         res.end(JSON.stringify(response));
       },
+      stream: (responseCode, stream, headers) => {
+        res.set(headers);
+        res.writeHead(responseCode);
+        stream.pipe(res, {end: false});
+        stream.on('end', () => {
+          res.end();
+        });
+      },
       end: (responseCode, headers) => {
         (headers = headers || {})["content-type"] = "application/json";
         res.set(headers);
