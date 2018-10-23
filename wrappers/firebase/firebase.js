@@ -23,13 +23,12 @@ class Firebase
 		callback();
 	}
 
-	createSessionWithUsernameAndPassword(config, email, password) {
-		const configId = config.id;
+	createSessionWithUsernameAndPassword(configId, email, password) {
 		let session = this.sessions[configId];
 		if (session)
 			return session;
 
-		session = new FirebaseSession(this.config[config], new FirebaseAuth_UsernameAndPassword(email, password));
+		session = new FirebaseSession(this.config[configId], new FirebaseAuth_UsernameAndPassword(email, password));
 		this.sessions[configId] = session;
 		session.connect(require('firebase'));
 		return session;
