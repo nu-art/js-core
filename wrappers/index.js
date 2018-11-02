@@ -6,6 +6,7 @@ module.exports = {
 	EmailSender: require("./emailer/email-sender"),
 	S3: require("./aws/s3"),
 	GoogleStorage: require("./google/storage"),
+	Saml: require("./saml/saml"),
 };
 
 require("./http-server/error-handler");
