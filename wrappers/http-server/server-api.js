@@ -66,6 +66,9 @@ class ServerApi
         res.writeHead(responseCode);
         res.end();
       },
+      redirect: (responseCode, url) => {
+        res.redirect(responseCode, url);
+      },
       exception: (exception, message, headers) => {
         const target = {};
         Object.assign(target, exception.errorBody);
