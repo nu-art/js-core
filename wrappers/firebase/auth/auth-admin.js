@@ -16,7 +16,7 @@ class FirebaseAuth_Admin
 
 	auth(firebase, config, callback) {
 
-		const serviceAccount = JSON.parse(require("fs").readFileSync("./dev-cert/fcm-key.json"));
+		const serviceAccount = JSON.parse(require("fs").readFileSync(config.pathToCredsFile));
 
 		const app = firebase.initializeApp({
 			credential: firebase.credential.cert(serviceAccount),
