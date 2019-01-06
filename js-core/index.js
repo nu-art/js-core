@@ -24,4 +24,5 @@ module.exports.validator = require("./core/validator");
 module.exports.Validator = require("./core/new-validator");
 module.exports.CommandLine = require("./core/command-line");
 module.exports.Crypto = require("./core/crypto");
+module.exports.CliParams = require("./core/cli-params");
 
