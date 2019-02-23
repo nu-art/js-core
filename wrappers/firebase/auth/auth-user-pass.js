@@ -5,23 +5,23 @@
 const FirebaseAuth = require("../firebase-auth");
 
 class FirebaseAuth_UsernameAndPassword
-  extends FirebaseAuth {
+	extends FirebaseAuth {
 
-  constructor(username, password) {
-    super();
+	constructor(username, password) {
+		super();
 
-    this.username = username;
-    this.password = password;
-  }
+		this.username = username;
+		this.password = password;
+	}
 
-  auth(firebase, config, callback) {
-    const app = firebase.initializeApp(config, config.id);
-    firebase.auth(app).signInWithEmailAndPassword(this.username, this.password).then(() => {
-      callback(undefined, app);
-    }).catch(function (err) {
-      callback(err);
-    });
-  }
+	auth(firebase, config, callback) {
+		const app = firebase.initializeApp(config, config.id);
+		firebase.auth(app).signInWithEmailAndPassword(this.username, this.password).then(() => {
+			callback(undefined, app);
+		}).catch(function (err) {
+			callback(err);
+		});
+	}
 }
 
 module.exports = FirebaseAuth_UsernameAndPassword;

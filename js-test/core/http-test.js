@@ -86,8 +86,8 @@ class HttpRequestTest
 			return "";
 
 		return "?" + Object.keys(this.params).map((key) => {
-				return key + "=" + this.params[key];
-			}).join("&");
+			return key + "=" + this.params[key];
+		}).join("&");
 	}
 
 	execute(callback, logger) {
@@ -151,8 +151,7 @@ class HttpRequestTest
 					Object.keys(responseToValidate.body).forEach((errorKey) => {
 						this.logError(` ---- Response: ${Logger.indentBy(`${errorKey}: ${responseToValidate.body[errorKey]}`, " ---- Response: ".length + 1)}`);
 					})
-			}
-			else
+			} else
 				this.logVerbose(" ---- Response: " + Logger.indentBy(JSON.stringify(responseToValidate.body, null, 2), " ---- Response: ".length + 1));
 
 			let e1;

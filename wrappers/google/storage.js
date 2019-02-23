@@ -38,32 +38,32 @@ class GoogleStorage
 		};
 
 		this.client.bucket(bucketName).file(pathToRemoteFile).getSignedUrl(options)
-				.then(results => {
-					const url = results[0];
+			.then(results => {
+				const url = results[0];
 
-					callback(undefined, {
-						originalFileName: originalFileName,
-						fileName: pathToRemoteFile,
-						securedUrl: url,
-						publicUrl: encodeURI(`https://storage.googleapis.com/${bucketName}${pathToRemoteFile}`)
-					});
-				})
-
-				.catch(err => {
-					callback(err);
+				callback(undefined, {
+					originalFileName: originalFileName,
+					fileName: pathToRemoteFile,
+					securedUrl: url,
+					publicUrl: encodeURI(`https://storage.googleapis.com/${bucketName}${pathToRemoteFile}`)
 				});
+			})
+
+			.catch(err => {
+				callback(err);
+			});
 	}
 
 	makePublic(bucketName, fileName, callback) {
 		this.client.bucket(bucketName)
-				.file(fileName)
-				.makePublic()
-				.then(() => {
-					callback();
-				})
-				.catch(err => {
-					callback(err);
-				});
+			.file(fileName)
+			.makePublic()
+			.then(() => {
+				callback();
+			})
+			.catch(err => {
+				callback(err);
+			});
 	}
 }
 

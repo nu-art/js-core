@@ -4,9 +4,9 @@
 
 class FirebaseAuth {
 
-  auth() {
-    throw new Error("Implementation missing!!");
-  }
+	auth() {
+		throw new Error("Implementation missing!!");
+	}
 }
 
 module.exports = FirebaseAuth;

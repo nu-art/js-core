@@ -3,15 +3,15 @@
  */
 
 class DateTime {
-    currentTimeMillies() {
-        const date = new Date();
-        return date.getTime();
-    }
+	currentTimeMillies() {
+		const date = new Date();
+		return date.getTime();
+	}
 
-    currentTimeMilliesWithTimeZone() {
-        const date = new Date();
-        return date.getTime() + date.getTimezoneOffset();
-    }
+	currentTimeMilliesWithTimeZone() {
+		const date = new Date();
+		return date.getTime() + date.getTimezoneOffset();
+	}
 }
 
 module.exports = new DateTime();

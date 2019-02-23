@@ -98,12 +98,12 @@ class FirebaseSession
 		}
 
 		this.app.messaging().send(Object.assign({data: message}, {token: token}))
-				.then((response) => {
-					callback(undefined, response);
-				})
-				.catch((error) => {
-					callback(error);
-				});
+			.then((response) => {
+				callback(undefined, response);
+			})
+			.catch((error) => {
+				callback(error);
+			});
 	}
 }
 

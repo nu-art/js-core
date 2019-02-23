@@ -8,7 +8,7 @@
 const Wrapper = require('../wrapper-core').Wrapper;
 
 class Saml
-extends Wrapper {
+	extends Wrapper {
 
 	constructor() {
 		super("saml");
@@ -26,7 +26,7 @@ extends Wrapper {
 	}
 
 	loginRequest(callback) {
-		this.sp.create_login_request_url(this.idp, {}, function(err, login_url, request_id) {
+		this.sp.create_login_request_url(this.idp, {}, function (err, login_url, request_id) {
 			if (err != null) {
 				callback(err);
 			} else {
@@ -40,7 +40,7 @@ extends Wrapper {
 	}
 
 	assert(options, callback) {
-		this.sp.post_assert(this.idp, options, function(err, saml_response) {
+		this.sp.post_assert(this.idp, options, function (err, saml_response) {
 			if (err != null) {
 				callback(err);
 			} else {
@@ -53,7 +53,7 @@ extends Wrapper {
 	}
 
 	logoutRequest(options, callback) {
-		this.sp.create_logout_request_url(this.idp, options, function(err, logout_url) {
+		this.sp.create_logout_request_url(this.idp, options, function (err, logout_url) {
 			if (err != null) {
 				callback(err);
 			} else {
@@ -63,4 +63,5 @@ extends Wrapper {
 	}
 
 }
+
 module.exports = Saml;
