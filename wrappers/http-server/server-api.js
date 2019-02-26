@@ -13,17 +13,22 @@ class ServerApi
     super(tag || relativePath);
     this.method = method;
     this.relativePath = "/" + relativePath;
+    this.middlewareArray = [];
+  }
+
+  setMiddleWareArray(middlewareArray) {
+      this.middlewareArray = middlewareArray;
   }
 
   route(router, prefixUrl) {
     let fullPath = `${prefixUrl ? "/" + prefixUrl : ""}${this.relativePath}`;
+
     switch (this.method) {
       case ServerApi.Method_POST:
-        router.post(fullPath, this.call.bind(this));
+        router.post(fullPath, ...this.middlewareArray, this.call.bind(this));
         break;
-
       case ServerApi.Method_GET:
-        router.get(fullPath, this.call.bind(this));
+        router.get(fullPath, ...this.middlewareArray, this.call.bind(this));
         break;
     }
   }
