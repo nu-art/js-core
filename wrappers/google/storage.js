@@ -4,7 +4,6 @@
 
 
 const Wrapper = require('../wrapper-core').Wrapper;
-var fs = require('fs');
 
 class GoogleStorage
 	extends Wrapper {
@@ -13,18 +12,25 @@ class GoogleStorage
 		super("google-storage");
 	}
 
-	_connect(callback) {
-		const Storage = require('@google-cloud/storage').Storage;
-		this.client = new Storage({
-			projectId: this.config.projectId,
-			keyFilename: this.config.pathToCredsFile,
+	_connect() {
+		return new Promise((resolve, reject) => {
+			try {
+				const Storage = require('@google-cloud/storage').Storage;
+				this.client = new Storage({
+					projectId: this.config.projectId,
+					keyFilename: this.config.pathToCredsFile,
+				});
+				resolve();
+			} catch (e) {
+				reject(e);
+			}
 		});
-
-		callback();
 	}
 
-	_waitForConnectivity(callback) {
-		callback();
+	_waitForConnectivity() {
+		return new Promise((resolve) => {
+			resolve();
+		});
 	}
 
 	downloadFile(pathToRemoteFile, callback) {
@@ -55,15 +61,9 @@ class GoogleStorage
 	}
 
 	makePublic(bucketName, fileName, callback) {
-		this.client.bucket(bucketName)
+		return this.client.bucket(bucketName)
 			.file(fileName)
-			.makePublic()
-			.then(() => {
-				callback();
-			})
-			.catch(err => {
-				callback(err);
-			});
+			.makePublic();
 	}
 }
 
