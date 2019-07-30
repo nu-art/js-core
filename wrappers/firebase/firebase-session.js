@@ -59,7 +59,8 @@ class FirebaseSession
 			return;
 		}
 		const ref = this.db.ref(path);
-		const listener = ref.on("value", (snapshot, err) => {
+		let listener = undefined;
+		listener = ref.on("value", (snapshot, err) => {
 			if (err)
 				return callback(err);
 			const handle = {ref: ref, listener: listener};
