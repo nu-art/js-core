@@ -48,6 +48,31 @@ class FirebaseSession
 		});
 	}
 
+	listen(path, callback) {
+		if (!this.db) {
+			this.toExecute.push((err) => {
+				if (err)
+					return callback(err);
+
+				this.listen(path, callback);
+			});
+			return;
+		}
+		const ref = this.db.ref(path);
+		const listener = ref.on("value", (snapshot, err) => {
+			if (err)
+				return callback(err);
+			const handle = {ref: ref, listener: listener};
+			callback(undefined, snapshot.val(), handle);
+		});
+	}
+
+	stopListening(handle) {
+		if (!handle || !handle.ref)
+			return;
+		(handle.ref).off("value", handle.listener)
+	}
+
 	set(path, value, callback) {
 		if (!this.db) {
 			this.toExecute.push((err) => {
@@ -79,6 +104,25 @@ class FirebaseSession
 		}
 
 		this.db.ref(path).update(value, (err) => {
+			if (err)
+				return callback(err);
+
+			callback();
+		});
+	}
+
+	delete(path, callback) {
+		if (!this.db) {
+			this.toExecute.push((err) => {
+				if (err)
+					return callback(err);
+
+				this.delete(path, callback);
+			});
+			return;
+		}
+
+		this.db.ref(path).remove((err) => {
 			if (err)
 				return callback(err);
 
